@@ -1,20 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Text;
 using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
+using AutoMapper;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using GServer.Api.ViewModels;
+using GServer.Api.ViewModels.DomainMapping;
+using GServer.Api.ViewModels.Validators;
 using Infrastructure.Data;
 using Infrastructure.Repository;
+using Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GServer.Api
 {
@@ -30,16 +34,54 @@ namespace GServer.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddFluentValidation();
             
+            services.AddTransient<IValidator<UserViewModel>, UserViewModelValidator>();
+            services.AddTransient<IValidator<UserResetPasswordViewModel>, UserResetPasswordValidator>();
+
+            // ## Authentication - Authorization ##
+            services.AddAuthentication()
+            .AddJwtBearer(options => {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = "Issuer",
+                    ValidAudience = "Audience",
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateActor = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(Configuration["JWT:Secret"])
+                    )
+                };
+            });
+            // for default value of authorization policy builder
+            services.AddAuthorization(options =>
+            {
+                var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(
+                    JwtBearerDefaults.AuthenticationScheme);
+                defaultAuthorizationPolicyBuilder = 
+                    defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser();
+                options.DefaultPolicy = defaultAuthorizationPolicyBuilder.Build();
+            });
+            // ## Authentication - Authorization ##
+
             services.AddDbContext<GServerDbContext>(options => {
                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddIdentity<User, AppIdentityRole>()
-                .AddEntityFrameworkStores<GServerDbContext>();
-
+            services.AddIdentity<User, AppIdentityRole>(options => {
+                options.Password.RequireNonAlphanumeric = false;
+            }).AddEntityFrameworkStores<GServerDbContext>();
+            
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IGameRootRepository, GameRootRepository>();
+            services.AddScoped<IEmailSender, EmailSender>();
+
+            services.AddAutoMapper(typeof(UserProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +96,8 @@ namespace GServer.Api
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseHttpsRedirection();
             app.UseAuthentication();

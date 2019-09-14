@@ -16,13 +16,13 @@ namespace Infrastructure.Repository
         {
         }
 
-        public IReadOnlyList<Game> ListAllGames()
+        public async Task<IReadOnlyList<Game>> ListAllGames()
         {
-            return _gServerDbContext.Games
+            return await _gServerDbContext.Games
                 .Include(g => g.GameRoot)
                 .Include(c => c.Category)
                 .Include(u => u.User)
-                .ToList();
+                .ToListAsync();
         }
 
         public async Task<Game> GetGameWithId(Guid id)

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ApplicationCore.Entities;
@@ -11,6 +10,6 @@ namespace ApplicationCore.Interfaces
         : IAsyncRepository<Game, Guid> 
     {
         Task<Game> GetGameWithId(Guid id);
-        IReadOnlyList<Game> ListAllGames();
+        Task<IReadOnlyList<Game>> ListAllGames();
     }
 }
