@@ -40,6 +40,7 @@ namespace GServer.Api
                 .AddFluentValidation();
             
             services.AddTransient<IValidator<UserViewModel>, UserViewModelValidator>();
+            services.AddTransient<IValidator<GameViewModel>, GameViewModelValidator>();
             services.AddTransient<IValidator<UserResetPasswordViewModel>, UserResetPasswordValidator>();
 
             // ## Authentication - Authorization ##
@@ -80,13 +81,14 @@ namespace GServer.Api
             
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IGameRootRepository, GameRootRepository>();
+            services.AddScoped<IGameRepository, GameRepository>();
             services.AddScoped<IEmailSender, EmailSender>();
 
-            services.AddAutoMapper(typeof(UserProfile));
+            services.AddAutoMapper(typeof(UserProfile), typeof(GameProfile));
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "GServer API", Version = "v1" });
             });
         }
 

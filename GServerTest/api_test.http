@@ -37,3 +37,23 @@ content-type: application/json
     "username": "furkan",
     "password": "test9QAS!"
 }
+
+###
+
+GET http://localhost:5000/api/game HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZnVya2FuIiwibmJmIjoxNTY4NDU5NjMyLCJleHAiOjE1Njg1NDYwMzIsImlzcyI6Iklzc3VlciIsImF1ZCI6IkF1ZGllbmNlIn0.d6RtI4et40qxzL78h6XpBf3-iKpWr_z1IAlRhv4geGQ
+
+###
+
+POST http://localhost:5000/api/game HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZnVya2FuIiwibmJmIjoxNTY4NDU5NjMyLCJleHAiOjE1Njg1NDYwMzIsImlzcyI6Iklzc3VlciIsImF1ZCI6IkF1ZGllbmNlIn0.d6RtI4et40qxzL78h6XpBf3-iKpWr_z1IAlRhv4geGQ
+
+{
+    "userId": "70e7a355-a606-4065-928c-7bbed8eeff87",
+    "categoryId": "1",
+    "gameRootId": "1",
+    "link": "http://localhost:5000",
+    "description": "lorem ipsum <html> <head> </head> <html>",
+}
