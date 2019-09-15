@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
 using AutoMapper;
+using FluentValidation.AspNetCore;
 using GServer.Api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,9 +27,11 @@ namespace GServer.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IReadOnlyList<Game>> Get()
+        public async Task<IReadOnlyList<GameViewModel>> Get()
         {
-            return await gameRepository.ListAllAsync();
+            var games = await gameRepository.ListAllGames();
+            var game_mapper = mapper.Map<IReadOnlyList<GameViewModel>>(games);
+            return game_mapper;
         }
 
         [HttpGet("{id}")]
@@ -57,9 +60,26 @@ namespace GServer.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public Task Put([FromBody] GameViewModel model)
+        public async Task<IActionResult> Put(
+            Guid id, 
+            [CustomizeValidator(Properties="CategoryId,GameRootId,Link,Description,ImageURL")]
+            [FromBody] GameViewModel model
+        )
         {
-            return Task.CompletedTask;
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var game = await gameRepository.GetByIdAsync(id);
+            if(game is null)
+            {
+                return NotFound();
+            }
+
+            var _mapper = mapper.Map(model, game);
+            await gameRepository.UpdateAsync(_mapper);
+            return Ok(_mapper);
         }
     }
 }

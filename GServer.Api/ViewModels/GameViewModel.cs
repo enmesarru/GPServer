@@ -8,5 +8,6 @@ namespace GServer.Api.ViewModels
         public int CategoryId { get; set; }
         public string UserId { get; set; }
         public int GameRootId { get; set; }
+        public UserInformationViewModel User { get; set; }
     }
 }

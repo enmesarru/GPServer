@@ -42,7 +42,6 @@ namespace GServer.Api
             services.AddTransient<IValidator<UserViewModel>, UserViewModelValidator>();
             services.AddTransient<IValidator<GameViewModel>, GameViewModelValidator>();
             services.AddTransient<IValidator<UserResetPasswordViewModel>, UserResetPasswordValidator>();
-
             // ## Authentication - Authorization ##
             services.AddAuthentication()
             .AddJwtBearer(options => {
