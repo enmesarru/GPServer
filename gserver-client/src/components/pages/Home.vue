@@ -6,7 +6,7 @@ export default {
 
 <template>
     <div>
-        <h1> GServer Client Test </h1>
+        <h1>Test</h1>
     </div>
 </template>
 

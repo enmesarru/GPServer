@@ -3,6 +3,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+// Css
+import 'milligram';
+import './assets/css/style.css'
+
 Vue.config.productionTip = false
 
 new Vue({
