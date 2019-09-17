@@ -16,3 +16,6 @@
 .text-center {
     text-align: center;
 }
+.modal-error-message {
+    color: #ca4d4d;
+}

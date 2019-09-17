@@ -3,11 +3,15 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import VModal from 'vue-js-modal';
+Vue.use(VModal, { dialog: true });
+
 // Css
 import 'milligram';
 import './assets/css/style.css'
 
 Vue.config.productionTip = false
+
 
 new Vue({
   router,
