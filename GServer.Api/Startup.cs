@@ -35,6 +35,7 @@ namespace GServer.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddFluentValidation();
@@ -104,13 +105,20 @@ namespace GServer.Api
                 app.UseHsts();
             }
             
+            app.UseCors(options => 
+                options
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin()
+            );
+            
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
-
+            
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();

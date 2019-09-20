@@ -28,6 +28,14 @@ export default {
                 console.log(errorContent)
                 this.$modal.show('dialog', { title: "Errors", text: errorContent});
             }
+        },
+        register() {
+            if(!this.isFail) {
+                this.$store
+                    .dispatch("register", this.formData)
+                    .then(() => this.$router.push("/"))
+                    .catch(err => console.log(err));
+            }
         }
     }
 }

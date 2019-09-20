@@ -27,12 +27,15 @@ export default {
                 <sign-up :isActive = "signInForm" />
             </div>
             <div class="login-box-item">
-                <input class="button button-black full-button" @click="signInForm = false" v-if="signInForm" type="button" value="Sign-up">
+                <input class="button button-black full-button" 
+                    @click="signInForm = false" 
+                    v-if="signInForm" 
+                    type="button" 
+                    value="Sign-up">
             </div>
 
             <div class="login-box-item">
-                <v-dialog name="login-form-errors">
-                </v-dialog>
+                <v-dialog name="login-form-errors" />
             </div>
         </div>
     </div>
