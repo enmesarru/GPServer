@@ -20,6 +20,8 @@ namespace ApplicationCore.Entities
 
         public int GameRootId { get; set; }
 
+        public string Name { get; set; }
+
         public virtual GameRoot GameRoot { get; set; }
         public virtual User User { get; set; }
         public virtual Category Category { get; set; }

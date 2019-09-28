@@ -42,25 +42,29 @@ namespace GServer.Api.Controllers
             }
 
             var user_account = await userManager.FindByNameAsync(model.Username);
-            var user = await userManager.CheckPasswordAsync(user_account, model.Password);
 
             if(user_account == null) {
                 return Unauthorized();
             }
+
+            var user = await userManager.CheckPasswordAsync(user_account, model.Password);
             
             if(user == false) {
                 return Unauthorized();
             }
 
+            var identityOptions = new IdentityOptions();
+            
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, model.Username),
+                new Claim(identityOptions.ClaimsIdentity.UserIdClaimType, user_account.Id),
+                new Claim(JwtRegisteredClaimNames.Sub, user_account.UserName)
             };
-            Console.WriteLine(configuration["JWT:Secret"]);
+            
             var token = new JwtSecurityToken
             (
                 claims: claims,
-                expires: DateTime.UtcNow.AddDays(1),
+                expires: DateTime.UtcNow.AddMinutes(50),
                 notBefore: DateTime.UtcNow,
                 audience: "Audience",
                 issuer: "Issuer",

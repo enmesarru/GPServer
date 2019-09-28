@@ -26,14 +26,19 @@ export default {
                 this.$modal.show('dialog', { title: "Errors", text: errorContent});
             }
         },
-        login() {
+        async login() {
             if(!this.isFail) {
-                this.$store
+                await this.$store
                     .dispatch("login", this.formData)
                     .then(() => this.$router.push("/"))
-                    .catch(error => console.log(error));
+                    .catch(error => {
+                        this.$modal.show('dialog', { 
+                            title: "Information", 
+                            text: 'Your username or password was wrong.'
+                        });
+                    });
             }
-        }
+        },
     },
 }
 </script>

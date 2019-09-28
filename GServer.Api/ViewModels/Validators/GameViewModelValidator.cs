@@ -23,6 +23,7 @@ namespace GServer.Api.ViewModels.Validators
             RuleFor(game => game.ImageURL).Null();
             RuleFor(game => game.Link).NotNull();
             RuleFor(game => game.Description).NotNull();
+            RuleFor(game => game.Name).NotNull();
 
             RuleFor(game => game.CategoryId).CustomAsync( async (id, context, next) => {
                 var is_category_exist = await ExistsCategory(id);

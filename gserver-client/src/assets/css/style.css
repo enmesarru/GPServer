@@ -1,11 +1,11 @@
 .button-black {
-    background-color: black!important;
-    border-color: black!important;
+    background-color: #001f3f!important;
+    border-color: #001f3f!important;
 }
 .button-black.button-clear,
 .button-black.button-outline {
     background-color: transparent;
-    color: black;
+    color: white;
 }
 .button-black.button-clear {
     border-color: transparent;
@@ -18,4 +18,17 @@
 }
 .modal-error-message {
     color: #ca4d4d;
+}
+
+.button-blue {
+    background-color: #0074D9!important;
+    border-color: #0074D9!important;
+}
+.button-blue.button-clear,
+.button-blue.button-outline {
+    background-color: transparent;
+    color: white;
+}
+.button-blue.button-clear {
+    border-color: transparent;
 }

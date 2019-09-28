@@ -1,12 +1,23 @@
 <script>
+import { mapGetters, mapActions } from 'vuex';
+import GameItem from '../shared/GameItem';
 export default {
-    name: 'Home'
+    name: 'Home',
+    created() {
+        this.fetchAllGames();
+    },
+    methods: {
+        ...mapActions(['fetchAllGames'])
+    },
+    computed: {
+        ...mapGetters(['allGames']),
+    }
 }
 </script>
 
 <template>
     <div>
-        <h1>Test</h1>
+        <!-- Will be game list, here-->
     </div>
 </template>
 

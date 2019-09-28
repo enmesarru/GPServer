@@ -28,13 +28,16 @@ html {
 #container {
   display: grid;
   grid-template-areas: "navbar content";
-  grid-gap: 10px;
+  grid-gap: 5px;
   grid-template-columns: 70px 1fr;
   height: 100vh;
-  background-color:#011627;
+  background-color: #49d0f7;
 
 }
 .content{
   height: 100vh;
+  padding: 10px;
+  background-color: #e6e6e6;
+  overflow-y: scroll;
 }
 </style>

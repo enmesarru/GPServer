@@ -26,6 +26,7 @@ namespace GServer.Api.Controllers
             this.mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IReadOnlyList<GameViewModel>> Get()
         {
@@ -34,6 +35,7 @@ namespace GServer.Api.Controllers
             return game_mapper;
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
@@ -62,7 +64,7 @@ namespace GServer.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(
             Guid id, 
-            [CustomizeValidator(Properties="CategoryId,GameRootId,Link,Description,ImageURL")]
+            [CustomizeValidator(Properties="CategoryId,GameRootId,Name,Link,Description,ImageURL")]
             [FromBody] GameViewModel model
         )
         {

@@ -25,16 +25,32 @@ export default {
                 const messages = Object.values(this.errorMessages)
                     .map(message => `<li class="modal-error-message"> ${message} </li>`);
                 const errorContent = `<ul> ${messages.join('')} </ul>`;
-                console.log(errorContent)
                 this.$modal.show('dialog', { title: "Errors", text: errorContent});
             }
         },
-        register() {
+        async register() {
             if(!this.isFail) {
-                this.$store
+                await this.$store
                     .dispatch("register", this.formData)
-                    .then(() => this.$router.push("/"))
-                    .catch(err => console.log(err));
+                    .then(() => {
+                        this.$modal.show('dialog', { 
+                            title: "Information", 
+                            text: 'Registration has been done successfully. You will be redirected in seconds.'
+                        });
+
+                        setTimeout(() => {
+                            this.$router.go({
+                                path: '/',
+                                force: true
+                            });
+                        }, 2500);
+                    })
+                    .catch(err => {
+                        this.$modal.show('dialog', { 
+                            title: "Error", 
+                            text: 'Something went wrong.'
+                        });
+                    });
             }
         }
     }
@@ -42,7 +58,7 @@ export default {
 </script>
 
 <template>
-    <form v-if="!isActive">
+    <form v-if="!isActive" @submit.prevent="register">
         <fieldset>
             <label for="emailField">E-mail</label>
             <input type="email" v-model="formData.email" placeholder="E-mail" id="emailField">
@@ -53,7 +69,7 @@ export default {
             <label for="passwordField">Password</label>
             <input type="password" v-model="formData.password" placeholder="Password" id="passwordField">
 
-            <input class="button-primary full-button" @click="signUpValidate" type="button" value="Sign-up">
+            <input class="button-primary full-button" @click="signUpValidate" type="submit" value="Sign-up">
         </fieldset>
     </form>
 </template>

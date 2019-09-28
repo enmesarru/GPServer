@@ -76,13 +76,16 @@ namespace GServer.Api
             });
 
             services.AddIdentity<User, AppIdentityRole>(options => {
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
             }).AddEntityFrameworkStores<GServerDbContext>();
             
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IGameRootRepository, GameRootRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
-            services.AddScoped<IEmailSender, EmailSender>();
+            services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddAutoMapper(typeof(UserProfile), typeof(GameProfile));
 
