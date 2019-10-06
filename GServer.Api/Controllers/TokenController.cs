@@ -52,13 +52,12 @@ namespace GServer.Api.Controllers
                 return Unauthorized();
             }
 
-            var identityOptions = new IdentityOptions();
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(identityOptions.ClaimsIdentity.UserIdClaimType, user_account.Id),
+                new Claim("userId", user_account.Id),
                 new Claim(JwtRegisteredClaimNames.Sub, user_account.UserName),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
+                // new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.Now.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
             };
             
             var access_token = CreateAccessToken(claims);
@@ -73,10 +72,9 @@ namespace GServer.Api.Controllers
             var token = new JwtSecurityToken
             (
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(5),
-                notBefore: DateTime.UtcNow,
-                audience: "Audience",
-                issuer: "Issuer",
+                expires: DateTime.UtcNow.AddMinutes(20),
+                audience: configuration["JWT:Audience"],
+                issuer: configuration["JWT:Issuer"],
                 signingCredentials: new SigningCredentials(
                     new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(configuration["JWT:Secret"])),

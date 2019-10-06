@@ -20,29 +20,29 @@ namespace GServer.Api.ViewModels.Validators
             this.gameRootRepository = gameRootRepository;
             this.userManager = userManager;
 
-            RuleFor(game => game.ImageURL).Null();
+            RuleFor(game => game.ImageURL);
             RuleFor(game => game.Link).NotNull();
             RuleFor(game => game.Description).NotNull();
             RuleFor(game => game.Name).NotNull();
 
             RuleFor(game => game.CategoryId).CustomAsync( async (id, context, next) => {
-                var is_category_exist = await ExistsCategory(id);
-                if(!is_category_exist) {
+                var isCategoryExist = await ExistsCategory(id);
+                if(!isCategoryExist) {
                     context.AddFailure("The category id does not exist.");
                 }
 
             }).NotNull();
 
             RuleFor(game => game.GameRootId).CustomAsync( async (id, context, next) => {
-                var is_gameroot_exist = await ExistsGameRoot(id);
-                if(!is_gameroot_exist) {
+                var isGameRootExist = await ExistsGameRoot(id);
+                if(!isGameRootExist) {
                     context.AddFailure("The game root id does not exist");
                 }
             }).NotNull();
 
             RuleFor(game => game.UserId).CustomAsync( async (id, context, next) => {
-                var is_user_exist = await ExistsUser(id);
-                if(!is_user_exist) {
+                var isUserExist = await ExistsUser(id);
+                if(!isUserExist) {
                     context.AddFailure("The user id does not exist");
                 }
             }).NotNull();

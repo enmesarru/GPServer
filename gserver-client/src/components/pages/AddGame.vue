@@ -2,6 +2,8 @@
 import { mapActions, mapGetters } from 'vuex';
 import { VueEditor } from 'vue2-editor';
 import validationMixin from '../../mixins/validator';
+import jwt_decode from 'jwt-decode';
+import TokenManager from '../../utils/token.service';
 
 export default {
     name: 'AddGame',
@@ -10,6 +12,7 @@ export default {
         VueEditor,
     },
     created() {
+        this.canCreateAGame();
         this.fetchCategories();
         this.fetchGameTypes();
     },
@@ -35,7 +38,12 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['fetchCategories', 'fetchGameTypes', 'createNewGame']),
+        ...mapActions([
+            'fetchCategories',
+            'fetchGameTypes',
+            'createNewGame',
+            'canCreateAGame'
+        ]),
         validate() {
             if(!this.validateForm()) {
                 const messages = Object.values(this.errorMessages)
@@ -46,6 +54,8 @@ export default {
         },
         async add_new_game() {
             if(!this.isFail) {
+                const {userId} = jwt_decode(TokenManager.getToken());
+                this.formData.userId = userId;
                 await this.createNewGame(this.formData)
                     .then(() => {
                         this.$modal.show('dialog', {
@@ -65,7 +75,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['categories', 'gameTypes'])
+        ...mapGetters(['categories', 'gameTypes', 'canUserCreateGame'])
     }
 }
 </script>
@@ -94,7 +104,12 @@ export default {
         <div class="row">
             <div class="column">
                 <label for="imageURLField"> Server Image URL </label>
-                <input type="url" v-model="formData.imageURL" placeholder="URL" id="imageURLField"/>
+                <input 
+                    type="url" 
+                    v-model="formData.imageURL" 
+                    placeholder="URL" 
+                    id="imageURLField"
+                />
             </div>
         </div>
 
@@ -120,7 +135,14 @@ export default {
 
         <div class="row">
             <div class="column">
-                <input @click="validate" class="button-blue full-button create-game-button" type="submit" value="Create" />
+                <input 
+                    @click="validate" 
+                    :disabled="!this.canUserCreateGame" 
+                    class="button-blue full-button create-game-button" 
+                    type="submit" 
+                    :value="this.canUserCreateGame ? 'Create'
+                        : 'You have already created a game post, today'" 
+                />
             </div>
         </div>
       </fieldset>

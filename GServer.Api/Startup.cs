@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -49,27 +50,16 @@ namespace GServer.Api
             .AddJwtBearer(options => {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = "Issuer",
-                    ValidAudience = "Audience",
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateActor = true,
+                    ValidIssuer = Configuration["JWT:Issuer"],
+                    ValidAudience = Configuration["JWT:Audience"],
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
                         Encoding.UTF8.GetBytes(Configuration["JWT:Secret"])
                     ),
-                    ClockSkew = System.TimeSpan.Zero
-                };
-
-                options.Events = new JwtBearerEvents {
-                    OnAuthenticationFailed = context => {
-                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                        {
-                            context.Response.Headers.Add("Token-Expired", "true");
-                        }
-                        return Task.CompletedTask;  
-                    }
+                    ClockSkew = System.TimeSpan.Zero,
                 };
             });
             // for default value of authorization policy builder
@@ -113,6 +103,7 @@ namespace GServer.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                IdentityModelEventSource.ShowPII = true;
             }
             else
             {

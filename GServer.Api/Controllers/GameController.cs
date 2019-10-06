@@ -47,6 +47,13 @@ namespace GServer.Api.Controllers
             return new OkObjectResult(game);
         }
 
+        [HttpGet("user/{userId}")]
+        public async Task<bool> CanAddGame(string userId)
+        {
+            var result = await gameRepository.PermissionTheAddGame(userId);
+            return result;
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] GameViewModel model)
         {
@@ -55,10 +62,16 @@ namespace GServer.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var game_model = mapper.Map<Game>(model);
-            await gameRepository.AddAsync(game_model);
+            if(await gameRepository.PermissionTheAddGame(model.UserId)) {
+                var game_model = mapper.Map<Game>(model);
+                await gameRepository.AddAsync(game_model);
 
-            return new OkObjectResult(StatusCodes.Status201Created);
+                return new OkObjectResult(StatusCodes.Status201Created);
+            }
+            else {
+                return BadRequest();
+            }
+
         }
 
         [HttpPut("{id}")]

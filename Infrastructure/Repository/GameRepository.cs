@@ -33,5 +33,17 @@ namespace Infrastructure.Repository
                 .Include(u => u.User)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<bool> PermissionTheAddGame(string userId)
+        {
+            var lastGameDate = await _gServerDbContext.Games
+                .Where(x => x.UserId == userId)
+                .Select(x => x.CreatedOn)
+                .OrderByDescending(t => t.Date)
+                .ThenBy(t => t.TimeOfDay)
+                .FirstOrDefaultAsync();
+            int result = lastGameDate.Date.CompareTo(DateTime.Now.Date);
+            return result == 0 ? false : true;
+        }
     }
 }

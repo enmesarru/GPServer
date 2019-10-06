@@ -32,3 +32,13 @@
 .button-blue.button-clear {
     border-color: transparent;
 }
+
+.tag {
+    background-color: #9b4dca;
+    border-radius: .4rem;
+    color: #fff;
+    display: block;
+    height: 2.2rem;
+    text-align: center;
+    width: 5rem;
+}

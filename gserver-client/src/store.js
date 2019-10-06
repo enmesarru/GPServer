@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import jwt_decode from 'jwt-decode';
 import TokenManager from './utils/token.service';
 
 Vue.use(Vuex);
@@ -9,15 +10,22 @@ const http = axios.create({
   baseURL: 'http://localhost:5000/api',
 });
 
+const options = {
+  headers: {
+    'Authorization': `Bearer ${TokenManager.getToken()}`,
+  }
+};
+
 http.interceptors.request.use(
   config => {
     //  here is request handler before it sends
-
-    config.headers["Authorization"] = `Bearer ${TokenManager.getToken()}`;
+    // config.headers["Authorization"] = `Bearer ${TokenManager.getToken()}`;
     return config;
   },
   error => {
+    console.log(error);
     Promise.reject(error);
+
   }
 );
 
@@ -25,6 +33,7 @@ export default new Vuex.Store({
   state: {
     token: TokenManager.getToken() || '',
     status: '',
+    canUserCreateGame: false,
     allGames: [],
     gameTypes: [],
     categories: [],
@@ -49,6 +58,9 @@ export default new Vuex.Store({
     },
     set_all_gametypes(state, gametypes) {
       state.gameTypes = gametypes;
+    },
+    set_available_to_add_game(state, availability) {
+      state.canUserCreateGame = availability;
     }
   },
   actions: {
@@ -66,7 +78,6 @@ export default new Vuex.Store({
     logout({ commit }) {
       commit('logout');
       TokenManager.removeToken();
-      // delete Vue.prototype.$http.defaults.headers.common['Authorization'];
     },
     async fetchAllGames({ commit }) {
       try {
@@ -101,8 +112,17 @@ export default new Vuex.Store({
     },
     async createNewGame({ commit }, game) {
       try {
-        const result = await http.post("/game", game);
+        await http.post("/game", game, options);
       } catch (error) {
+        throw Error(error);
+      }
+    },
+    async canCreateAGame({ commit }) {
+      try {
+        const {userId} = jwt_decode(TokenManager.getToken());
+        const result = await http.get(`/game/user/${userId}`, options);
+        commit('set_available_to_add_game', result.data);
+      } catch(error) {
         throw Error(error);
       }
     }
@@ -111,6 +131,7 @@ export default new Vuex.Store({
     isLoggedIn: state => !!state.token,
     authStatus: state =>  state.status,
     allGames: state => state.allGames,
+    canUserCreateGame: state => state.canUserCreateGame,
     categories: state => 
       state.categories.map(value => 
         ({
@@ -119,11 +140,13 @@ export default new Vuex.Store({
         })
       ),
     gameTypes: state => 
-        state.gameTypes.map(value => 
-          ({
-            id: value.id,
-            label: value.name
-          })
-        )
+      state.gameTypes.map(value => 
+        ({
+          id: value.id,
+          label: value.name
+        })
+      ),
+    categoryById: state => id => state.categories.find(x => x.id === id),
+    gameTypeById: state => id => state.gameTypes.find(x => x.id === id)
   }
 });
