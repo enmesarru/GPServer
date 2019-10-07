@@ -44,7 +44,8 @@ namespace GServer.Api.Controllers
             {
                 return NotFound();
             }
-            return new OkObjectResult(game);
+            var game_mapper = mapper.Map<GameViewModel>(game);
+            return new OkObjectResult(game_mapper);
         }
 
         [HttpGet("user/{userId}")]

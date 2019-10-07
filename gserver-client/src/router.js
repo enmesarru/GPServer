@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Home from '@/components/pages/Home';
 import Login from '@/components/pages/Login';
 import AddGame from '@/components/pages/AddGame';
+import Game from '@/components/pages/Game';
 import store from './store';
 Vue.use(Router)
 
@@ -26,6 +27,11 @@ const router = new Router({
       path: '/game/create',
       requiresAuth: true,
       component: AddGame
+    },
+    {
+      path: '/game/:id',
+      component: Game,
+      name: 'game'
     }
   ]
 });

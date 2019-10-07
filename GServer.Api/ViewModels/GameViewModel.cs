@@ -2,6 +2,7 @@ namespace GServer.Api.ViewModels
 {
     public class GameViewModel
     {
+        public System.Guid Id { get; set; }
         public string Link { get; set; }
         public string Description { get; set; }
         public string ImageURL { get; set; }

@@ -26,7 +26,7 @@ export default {
 </script>
 
 <template>
-    <div>
+    <div class="game-grid">
         <!-- Will be game list, here-->
             <game-item 
                 v-for="game in allGames" 
@@ -38,5 +38,10 @@ export default {
 </template>
 
 <style>
-
+.game-grid {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
 </style>

@@ -6,7 +6,7 @@ export default {
 </script>
 
 <template>
-  <article class="game-list-item">
+  <div class="game-list-item">
       <div class="game-list-logo">
           <img :src="game.imageURL" alt="test"/>
           <span> {{ game.user.username }} </span>
@@ -14,15 +14,17 @@ export default {
       <div class="game-list-content">
           <div class="game-list-header"> {{ game.name }} </div>
           <div class="game-list-information">
-              <span class="tag"> {{ category.title }} </span>
-              <span class="tag"> {{ gameType.name }} </span>
+              <span class="tag" v-if="category"> {{ category.title }} </span>
+              <span class="tag" v-if="gameType"> {{ gameType.name }} </span>
+              <router-link :to="`/game/${game.id}`"> Show </router-link>
           </div>
       </div>
-  </article>
+  </div>
 </template>
 
 <style>
 .game-list-item {
+    margin: 5px;
     background-color: #fbfffe;
     width: 260px;
     display: flex;

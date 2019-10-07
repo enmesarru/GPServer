@@ -103,9 +103,30 @@ export default new Vuex.Store({
         throw Error(error);
       }
     },
+    async fetchCategoryById({commit}, id) {
+      try {
+        return await http.get(`/category/${id}`);
+      } catch (error) {
+        throw Error(error);
+      }
+    },
+    async fetchGameTypeById({commit}, id) {
+      try {
+        return await http.get(`/gameroot/${id}`);
+      } catch (error) {
+        throw Error(error);
+      }
+    },
+    async fetchGameById({commit}, id) {
+      try {
+        return await http.get(`/game/${id}`);
+      } catch (error) {
+        throw Error(error);
+      }
+    },
     async register({ commit }, user) {
       try {
-        const result = await http.post("/account", user);
+        await http.post("/account", user);
       } catch(error) {
         throw Error(error);
       }
