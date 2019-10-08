@@ -10,6 +10,9 @@ namespace GServer.Api.ViewModels.DomainMapping
             CreateMap<GameViewModel, Game>();
             CreateMap<Game, GameViewModel>();
 
+            CreateMap<GamesViewModel, Game>();
+            CreateMap<Game, GamesViewModel>();
+
             CreateMap<UserInformationViewModel, User>();
             CreateMap<User, UserInformationViewModel>();
         }

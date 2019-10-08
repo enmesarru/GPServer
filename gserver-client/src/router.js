@@ -4,6 +4,8 @@ import Home from '@/components/pages/Home';
 import Login from '@/components/pages/Login';
 import AddGame from '@/components/pages/AddGame';
 import Game from '@/components/pages/Game';
+import MyGames from '@/components/pages/MyGames';
+import Profile from '@/components/pages/Profile';
 import store from './store';
 Vue.use(Router)
 
@@ -32,6 +34,21 @@ const router = new Router({
       path: '/game/:id',
       component: Game,
       name: 'game'
+    },
+    {
+      path: '/user/:id/games',
+      component: MyGames,
+      name: 'usergames',
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/profile',
+      component: Profile,
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 });

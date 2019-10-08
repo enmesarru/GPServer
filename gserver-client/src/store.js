@@ -124,6 +124,13 @@ export default new Vuex.Store({
         throw Error(error);
       }
     },
+    async fetchGamesByUserId({commit}, userId) {
+      try {
+        return await http.get(`/game/${userId}/games`, options);
+      } catch(error) {
+        throw Error(error);
+      }
+    },
     async register({ commit }, user) {
       try {
         await http.post("/account", user);
@@ -152,6 +159,16 @@ export default new Vuex.Store({
     isLoggedIn: state => !!state.token,
     authStatus: state =>  state.status,
     allGames: state => state.allGames,
+    filterGames: state => filter => {
+      let games = state.allGames;
+      if(filter.category) {
+        games = games.filter(x => x.categoryId == filter.category);
+      }
+      if(filter.gameroot) {
+        games = games.filter(x => x.gameRootId == filter.gameroot);
+      }
+      return games;
+    },
     canUserCreateGame: state => state.canUserCreateGame,
     categories: state => 
       state.categories.map(value => 

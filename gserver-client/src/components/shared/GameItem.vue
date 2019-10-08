@@ -9,14 +9,14 @@ export default {
   <div class="game-list-item">
       <div class="game-list-logo">
           <img :src="game.imageURL" alt="test"/>
-          <span> {{ game.user.username }} </span>
+          <span v-if="game.user"> {{ game.user.username }} </span>
       </div>
       <div class="game-list-content">
           <div class="game-list-header"> {{ game.name }} </div>
           <div class="game-list-information">
               <span class="tag" v-if="category"> {{ category.title }} </span>
               <span class="tag" v-if="gameType"> {{ gameType.name }} </span>
-              <router-link :to="`/game/${game.id}`"> Show </router-link>
+              <router-link :to="{name:'game', params:{id: game.id}}"> Show </router-link>
           </div>
       </div>
   </div>
@@ -41,7 +41,8 @@ export default {
 }
 
 .game-list-item .game-list-logo img {
-    width: 45px;
+    width: 35px;
+    height: 35px;
     border-radius: 100px;
 } 
 

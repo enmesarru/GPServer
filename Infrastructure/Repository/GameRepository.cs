@@ -34,7 +34,7 @@ namespace Infrastructure.Repository
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<bool> PermissionTheAddGame(string userId)
+        public async Task<bool> PermissionToAddGame(string userId)
         {
             var lastGameDate = await _gServerDbContext.Games
                 .Where(x => x.UserId == userId)
@@ -45,5 +45,13 @@ namespace Infrastructure.Repository
             int result = lastGameDate.Date.CompareTo(DateTime.Now.Date);
             return result == 0 ? false : true;
         }
+
+        public async Task<IReadOnlyList<Game>> GetGamesByUserId(string userId) 
+            => await _gServerDbContext.Games
+                .Where(x => x.UserId == userId)
+                .Include(x => x.User)
+                .Include(x => x.Category)
+                .Include(x => x.GameRoot)
+                .ToListAsync();
     }
 }

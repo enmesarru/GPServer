@@ -9,6 +9,11 @@ export default {
             signInForm: true,
         };
     },
+    methods: {
+        turnLogin(value) {
+            this.signInForm = value;
+        }
+    },
     components: {
         SignIn,
         SignUp
@@ -24,7 +29,10 @@ export default {
             </div>
             <div class="login-box-item">
                 <sign-in :isActive = "signInForm"/>
-                <sign-up :isActive = "signInForm" />
+                <sign-up 
+                    :isActive = "signInForm" 
+                    v-on:turnLogin="turnLogin"
+                />
             </div>
             <div class="login-box-item">
                 <input class="button button-black full-button" 

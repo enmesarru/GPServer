@@ -11,6 +11,7 @@ namespace ApplicationCore.Interfaces
     {
         Task<Game> GetGameWithId(Guid id);
         Task<IReadOnlyList<Game>> ListAllGames();
-        Task<bool> PermissionTheAddGame(string userId);
+        Task<bool> PermissionToAddGame(string userId);
+        Task<IReadOnlyList<Game>> GetGamesByUserId(string userId);
     }
 }

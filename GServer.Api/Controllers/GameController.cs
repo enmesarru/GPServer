@@ -40,7 +40,7 @@ namespace GServer.Api.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             var game = await gameRepository.GetGameWithId(id);
-            if(game == null)
+            if(game is null)
             {
                 return NotFound();
             }
@@ -48,10 +48,22 @@ namespace GServer.Api.Controllers
             return new OkObjectResult(game_mapper);
         }
 
+        [HttpGet("{userId}/games")]
+        public async Task<IActionResult> Get(string userId)
+        {
+            var games = await gameRepository.GetGamesByUserId(userId);
+            if(games is null) 
+            {
+                return NotFound();    
+            }
+            var games_mapper = mapper.Map<IReadOnlyList<GamesViewModel>>(games);
+            return new OkObjectResult(games_mapper);
+        }
+
         [HttpGet("user/{userId}")]
         public async Task<bool> CanAddGame(string userId)
         {
-            var result = await gameRepository.PermissionTheAddGame(userId);
+            var result = await gameRepository.PermissionToAddGame(userId);
             return result;
         }
 
@@ -63,7 +75,7 @@ namespace GServer.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            if(await gameRepository.PermissionTheAddGame(model.UserId)) {
+            if(await gameRepository.PermissionToAddGame(model.UserId)) {
                 var game_model = mapper.Map<Game>(model);
                 await gameRepository.AddAsync(game_model);
 

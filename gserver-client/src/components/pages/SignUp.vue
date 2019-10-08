@@ -3,7 +3,7 @@ import validationMixin from '../../mixins/validator';
 
 export default {
     name: 'SignUp',
-    props: ['isActive'],
+    props: ['isActive', 'turnLogin'],
     mixins: [validationMixin],
     data() {
         return {
@@ -20,6 +20,9 @@ export default {
         };
     },
     methods: {
+        turn() {
+            this.$emit("turnLogin", !this.isActive)
+        },
         signUpValidate() {
             if(!this.validateForm()) {
                 const messages = Object.values(this.errorMessages)
@@ -70,6 +73,7 @@ export default {
             <input type="password" v-model="formData.password" placeholder="Password" id="passwordField">
 
             <input class="button-primary full-button" @click="signUpValidate" type="submit" value="Sign-up">
+            <input class="button-primary full-button" @click="turn" type="button" value="Turn" />
         </fieldset>
     </form>
 </template>

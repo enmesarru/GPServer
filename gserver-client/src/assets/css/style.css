@@ -42,3 +42,10 @@
     text-align: center;
     width: 5rem;
 }
+
+.game-grid {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}

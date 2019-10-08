@@ -1,5 +1,7 @@
 <script>
 import { mapGetters } from 'vuex';
+import TokenManager from '../../utils/token.service';
+import jwt_decode from 'jwt-decode';
 export default {
   name: 'AppBar',
   methods: {
@@ -13,7 +15,11 @@ export default {
   computed: {
     ...mapGetters([
         'isLoggedIn'
-    ])
+    ]),
+    userIdentifier() {
+        const {userId} = jwt_decode(TokenManager.getToken());
+        return userId;
+    }
   }
 }
 </script>
@@ -39,8 +45,15 @@ export default {
         </div>
 
         <div class="navbar-item" v-if="isLoggedIn">
+            <router-link :to="{ name: 'usergames', params: {id: userIdentifier}}">
+                Games
+            </router-link>
+        </div>
+
+        <div class="navbar-item" v-if="isLoggedIn">
             <a @click="logout"> Logout </a>
         </div>
+        
     </nav>
 </template>
 
