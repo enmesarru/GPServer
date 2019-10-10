@@ -48,9 +48,9 @@ namespace GServer.Api.Controllers
             return new OkObjectResult(StatusCodes.Status201Created);
         }
 
-        [HttpPut("{username}")]
+        [HttpPut("{userId}")]
         public async Task<IActionResult> Put(
-            string username,
+            string userId,
             [FromBody]
             UserResetPasswordViewModel model)
         {
@@ -59,15 +59,27 @@ namespace GServer.Api.Controllers
                 return BadRequest(ModelState);
             }
             
-            var user = await userManager.FindByNameAsync(username);
+            var user = await userManager.FindByIdAsync(userId);
+            if(user is null) {
+                return NotFound();
+            }
+            var checkUserPassword = await userManager
+                .CheckPasswordAsync(user, model.OldPassword);
             
-            var result =  await userManager
-                .ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
-
-            if(!result.Succeeded)
-                return BadRequest(result.Errors);
+            if(checkUserPassword)
+            {
+                var result =  await userManager
+                    .ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                
+                if(!result.Succeeded)
+                    return BadRequest(result.Errors);
             
-            return Ok(StatusCodes.Status200OK);
+                return Ok(StatusCodes.Status200OK);
+            } 
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }

@@ -153,6 +153,15 @@ export default new Vuex.Store({
       } catch(error) {
         throw Error(error);
       }
+    },
+    async changePassword({ commit }, user) {
+      try {
+        const {userId, sub} = jwt_decode(TokenManager.getToken());
+        user.username = sub;
+        await http.put(`/account/${userId}`, user, options);
+      } catch(error) {
+        throw Error(error);
+      }
     }
   },
   getters: {
