@@ -6,14 +6,20 @@ using System.Threading.Tasks;
 using ApplicationCore.Entities;
 using ApplicationCore.Interfaces;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository
 {
     public class GameRepository : EfRepository<Game, Guid>, IGameRepository
     {
-        public GameRepository(GServerDbContext gServerDbContext) : base(gServerDbContext)
+        private readonly UserManager<User> userManager;
+        public GameRepository(
+            GServerDbContext gServerDbContext,
+            UserManager<User> userManager) 
+            : base(gServerDbContext)
         {
+            this.userManager = userManager;
         }
 
         public async Task<IReadOnlyList<Game>> ListAllGames()
@@ -46,12 +52,15 @@ namespace Infrastructure.Repository
             return result == 0 ? false : true;
         }
 
-        public async Task<IReadOnlyList<Game>> GetGamesByUserId(string userId) 
-            => await _gServerDbContext.Games
-                .Where(x => x.UserId == userId)
+        public async Task<IReadOnlyList<Game>> GetGamesByUserName(string username) 
+        { 
+            var user = await userManager.FindByNameAsync(username);
+            return await _gServerDbContext.Games
+                .Where(x => x.UserId == user.Id)
                 .Include(x => x.User)
                 .Include(x => x.Category)
                 .Include(x => x.GameRoot)
                 .ToListAsync();
+        }
     }
 }

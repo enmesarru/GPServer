@@ -26,6 +26,7 @@ const router = new Router({
       }
     },
     {
+      name: 'create-game',
       path: '/game/create',
       requiresAuth: true,
       component: AddGame
@@ -44,6 +45,7 @@ const router = new Router({
       }
     },
     {
+      name: 'profile',
       path: '/profile',
       component: Profile,
       meta: {

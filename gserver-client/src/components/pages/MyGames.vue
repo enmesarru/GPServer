@@ -18,10 +18,12 @@ export default {
             games: null,
         }
     },
-    async created() {
+    created() {
         try {
-            const {data} = await this.fetchGamesByUserId(this.$route.params.id);
-            this.games = data;
+            const username = this.$route.params.id;
+            this.fetchGamesByUserId(username).then(({data}) => {
+                this.games = data;
+            });
         } catch(error) {
             this.$modal.show('dialog', { 
                 title: "Error", 
@@ -33,19 +35,29 @@ export default {
 </script>
 
 <template>
-  <div class="game-grid" v-if="games">
+<div class="container">
+    <div class="row">
+        <router-link
+            tag="button"
+            class="full-button button button-black"
+            :to="{name: 'create-game'}"
+            >
+            Create a game post
+        </router-link>
+    </div>
+    <div class="row game-grid" v-if="games">
       <game-item 
         v-for="game in this.games" 
         v-bind:key="game.id"
         :game="game"
         :category="game.category" 
         :gameType="game.gameRoot"/>
-        
-  </div>
-  <div v-else>
-      There are not any games that you posted.
-      <v-dialog/>
-  </div>
+    </div>
+    <div v-else>
+        There are not any games that you posted.
+        <v-dialog/>
+    </div>
+</div>
 </template>
 
 <style>

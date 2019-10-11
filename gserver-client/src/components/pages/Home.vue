@@ -39,7 +39,7 @@ export default {
 <template>
 <div class="container">
     <div class="row">
-        <div class="column column-50">
+        <div class="column column-25">
             <label for="gamerootField"> Root of game </label>
             <v-select 
                 :reduce="root => root.id"
@@ -48,7 +48,7 @@ export default {
             </v-select>
         </div>
 
-        <div class="column column-50">
+        <div class="column column-25">
             <label for="gamerootField"> Category </label>
             <v-select 
                 :reduce="root => root.id"
@@ -70,8 +70,5 @@ export default {
 </template>
 
 <style>
-.inline-form {
-    display: flex;
-    align-items: center;
-}
+
 </style>

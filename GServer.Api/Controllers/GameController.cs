@@ -48,10 +48,10 @@ namespace GServer.Api.Controllers
             return new OkObjectResult(game_mapper);
         }
 
-        [HttpGet("{userId}/games")]
-        public async Task<IActionResult> Get(string userId)
+        [HttpGet("{username}/games")]
+        public async Task<IActionResult> Get(string username)
         {
-            var games = await gameRepository.GetGamesByUserId(userId);
+            var games = await gameRepository.GetGamesByUserName(username);
             if(games is null) 
             {
                 return NotFound();    

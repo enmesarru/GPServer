@@ -17,8 +17,8 @@ export default {
         'isLoggedIn'
     ]),
     userIdentifier() {
-        const {userId} = jwt_decode(TokenManager.getToken());
-        return userId;
+        const {sub} = jwt_decode(TokenManager.getToken());
+        return sub;
     }
   }
 }
@@ -50,6 +50,17 @@ export default {
             </router-link>
         </div>
 
+        <div class="navbar-item" v-if="isLoggedIn">
+            <router-link :to="{ name: 'profile' }">
+                Profile
+            </router-link>
+        </div>
+
+        <div class="navbar-item" v-if="isLoggedIn">
+            <router-link :to="{ name: 'create-game' }">
+                Create
+            </router-link>
+        </div>
         <div class="navbar-item" v-if="isLoggedIn">
             <a @click="logout"> Logout </a>
         </div>
